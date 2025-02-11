@@ -1,4 +1,3 @@
-import React from 'react';
 
 const IniciSessio = () => {
   return (
@@ -53,7 +52,7 @@ const IniciSessio = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default IniciSessio;
+export default IniciSessio

@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Registre = () => {
   return (
@@ -53,7 +52,7 @@ const Registre = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Registre;
+export default Registre
