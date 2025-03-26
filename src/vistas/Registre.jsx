@@ -1,33 +1,69 @@
+import { useState } from 'react'
 
 const Registre = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const cambio = (e) => {
+    const { name, value } = e.target
+    if (name === 'email') {
+      setEmail(value)
+    } else if (name === 'password') {
+      setPassword(value)
+    }
+  }
+
+  const envio = (e) => {
+    e.preventDefault()
+    const dades_usuaris = {
+      email,
+      password,
+    }
+
+    const usuarisExistentsString = localStorage.getItem('dades_usuaris')
+    const usuarisExistents = usuarisExistentsString ? JSON.parse(usuarisExistentsString) : []
+
+    if (usuarisExistents.some((usuari) => usuari.email === email)) {
+      setError('L\'usuari ja existeix.')
+      setSuccess('')
+    } else {
+      usuarisExistents.push(dades_usuaris)
+      localStorage.setItem('dades_usuaris', JSON.stringify(usuarisExistents))
+      setError('')
+      setSuccess('Registre completat amb èxit.')
+    }
+  }
+
   return (
     <>
-      <header>
-        <nav className="navbar navbar-light bg-light">
-          <div className="container-fluid">
-            <a className="navbar-brand">Gestión de incidencias FPLLEFIA</a>
-            <div>
-              <button className="btn btn-secondary ms-2">PANEL</button>
-              <button className="btn btn-secondary ms-2">LOGIN</button>
-              <button className="btn btn-secondary ms-2">REGISTRO</button>
-            </div>
-            <div>
-              <span>administrador@fpllefia.com</span>
-            </div>
-          </div>
-        </nav>
-      </header>
       <main className="container mt-5">
         <div className="pt-5">
           <h1 className="w-100 text-center">Registro</h1>
-          <form action="" className="form p-4 border shadow bordered mt-5 mx-auto" style={{ width: '400px' }}>
+          <form onSubmit={envio} className="form p-4 border shadow bordered mt-5 mx-auto" style={{ width: '400px' }}>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
             <label htmlFor="email" className="mt-2 form-label">User: </label>
-            <input type="text" className="form-control" placeholder="usuario@mail.com" />
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              placeholder="usuario@mail.com"
+              value={email}
+              onChange={cambio}
+            />
     
-            <label htmlFor="pass" className="mt-2 form-label">Contraseña: </label>
-            <input type="text" className="form-control" />
+            <label htmlFor="password" className="mt-2 form-label">Contraseña: </label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              value={password}
+              onChange={cambio}
+            />
     
-            <input type="text" className="mt-4 w-100 btn btn-primary" value="Entrar" id="enviar" />
+            <button type="submit" className="mt-4 w-100 btn btn-primary">Entrar</button>
           </form>
         </div>
       </main>

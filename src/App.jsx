@@ -4,6 +4,7 @@ import './App.css'
 import Registre from './vistas/Registre'
 import Panell from './vistas/Panell'
 import IniciSessio from './vistas/IniciSessio'
+import GestioUsuaris from './vistas/gestioUsuaris' 
 import Header from './componentes/header'
 import { UserProvider } from './context/UserContext'
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/registre" element={<Registre />} />
             <Route path="/panell" element={<Panell />} />
             <Route path="/inici-sessio" element={<IniciSessio />} />
+            <Route path="/gestio-usuaris" element={<GestioUsuaris />} />
           </Routes>
         </div>
       </Router>
