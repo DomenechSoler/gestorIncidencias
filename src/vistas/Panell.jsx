@@ -4,7 +4,7 @@ import TiquetsResolts from '../componentes/TiquetsResolts'
 import Comentari from '../componentes/comentari'
 import Comentaris from '../componentes/comentaris'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import NouTicket from './nouticket'
+import NouTicket from './NouTicket'
 
 const Panell = () => {
   const [tiquetsPendents, setTiquetsPendents] = useState([])
