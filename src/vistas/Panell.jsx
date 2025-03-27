@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import TiquetsPendents from '../componentes/TiquetsPendents'
 import TiquetsResolts from '../componentes/TiquetsResolts'
-import Comentari from '../componentes/Comentari'
-import Comentaris from '../componentes/Comentaris'
+import Comentari from '../componentes/comentari'
+import Comentaris from '../componentes/comentaris'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import NouTicket from './nouticket'
 
