@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from 'prop-types'
 
 const TiquetsResolts = ({ tiquetsResolts, handleViewComments, handleDeleteTiquet }) => {
     return (
@@ -35,6 +35,23 @@ const TiquetsResolts = ({ tiquetsResolts, handleViewComments, handleDeleteTiquet
             </tbody>
         </table>
     )
+}
+
+TiquetsResolts.propTypes = {
+    tiquetsResolts: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+            fecha: PropTypes.string.isRequired,
+            fechaResolucion: PropTypes.string.isRequired,
+            aula: PropTypes.string.isRequired,
+            grupo: PropTypes.string.isRequired,
+            ordenador: PropTypes.string.isRequired,
+            descripcion: PropTypes.string.isRequired,
+            alumno: PropTypes.string.isRequired,
+        })
+    ).isRequired,
+    handleViewComments: PropTypes.func.isRequired,
+    handleDeleteTiquet: PropTypes.func.isRequired,
 }
 
 export default TiquetsResolts

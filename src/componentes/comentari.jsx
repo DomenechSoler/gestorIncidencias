@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const Comentari = ({ onAddComentari }) => {
   const [text, setText] = useState('')
@@ -26,6 +26,12 @@ const Comentari = ({ onAddComentari }) => {
       <button type="submit" className="btn btn-primary">Afegir</button>
     </form>
   )
+}
+
+import PropTypes from 'prop-types'
+
+Comentari.propTypes = {
+  onAddComentari: PropTypes.func.isRequired,
 }
 
 export default Comentari

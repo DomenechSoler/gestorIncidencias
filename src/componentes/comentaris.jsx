@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from 'prop-types'
 
 const Comentaris = ({ comentaris = [] }) => {
   return (
@@ -11,6 +11,11 @@ const Comentaris = ({ comentaris = [] }) => {
       </ul>
     </div>
   )
+}
+
+// Validación de las props con PropTypes
+Comentaris.propTypes = {
+  comentaris: PropTypes.arrayOf(PropTypes.string),
 }
 
 export default Comentaris

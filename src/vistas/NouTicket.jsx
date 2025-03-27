@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const NouTicket = ({ dades_tiquets, setDadesTiquets }) => {
     const [aula, setAula] = useState('')
@@ -80,6 +81,10 @@ const NouTicket = ({ dades_tiquets, setDadesTiquets }) => {
             <button type="submit" className="btn btn-primary">Afegir Tiquet</button>
         </form>
     )
+}
+NouTicket.propTypes = {
+    dades_tiquets: PropTypes.array.isRequired,
+    setDadesTiquets: PropTypes.func.isRequired,
 }
 
 export default NouTicket

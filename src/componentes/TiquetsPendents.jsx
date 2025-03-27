@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from 'prop-types';
 
 const TiquetsPendents = ({ tiquetsPendents, handleResolveTiquet, handleEditTiquet, handleViewComments, handleDeleteTiquet }) => {
     return (
@@ -39,4 +39,30 @@ const TiquetsPendents = ({ tiquetsPendents, handleResolveTiquet, handleEditTique
     )
 }
 
-export default TiquetsPendents
+TiquetsPendents.defaultProps = {
+    tiquetsPendents: [],
+    handleResolveTiquet: () => {},
+    handleEditTiquet: () => {},
+    handleViewComments: () => {},
+    handleDeleteTiquet: () => {},
+};
+
+TiquetsPendents.propTypes = {
+    tiquetsPendents: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            fecha: PropTypes.string,
+            aula: PropTypes.string,
+            grupo: PropTypes.string,
+            ordenador: PropTypes.string,
+            descripcion: PropTypes.string,
+            alumno: PropTypes.string,
+        })
+    ),
+    handleResolveTiquet: PropTypes.func,
+    handleEditTiquet: PropTypes.func,
+    handleViewComments: PropTypes.func,
+    handleDeleteTiquet: PropTypes.func,
+};
+
+export default TiquetsPendents;
