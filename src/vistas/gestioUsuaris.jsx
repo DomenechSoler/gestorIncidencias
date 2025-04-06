@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 const GestioUsuaris = () => {
   const [usuaris, setUsuaris] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     const dadesUsuaris =
@@ -15,6 +17,12 @@ const GestioUsuaris = () => {
     )
     setUsuaris(updatedUsuaris)
     localStorage.setItem("dades_usuaris", JSON.stringify(updatedUsuaris))
+
+    setTimeout(() => {
+      localStorage.removeItem("current_user")
+      navigate("/inici-sessio") 
+      window.location.reload() 
+    }, 500)
   }
 
   return (

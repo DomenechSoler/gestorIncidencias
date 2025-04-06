@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { UserContext } from '../context/UserContext'
 import TiquetsPendents from '../componentes/TiquetsPendents'
 import TiquetsResolts from '../componentes/TiquetsResolts'
 import Comentari from '../componentes/comentari'
@@ -7,6 +8,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import NouTicket from './NouTicket'
 
 const Panell = () => {
+  const { currentUser } = useContext(UserContext) 
   const [tiquetsPendents, setTiquetsPendents] = useState([])
   const [tiquetsResolts, setTiquetsResolts] = useState([])
   const [selectedTiquet, setSelectedTiquet] = useState(null)
@@ -65,7 +67,7 @@ const Panell = () => {
   }
 
   const handleSaveChanges = () => {
-    const updatedPendents = tiquetsPendents.map(tiquet =>
+    const updatedPendents = tiquetsPendents.map((tiquet) =>
       tiquet.id === selectedTiquet.id ? selectedTiquet : tiquet
     )
     setTiquetsPendents(updatedPendents)
@@ -79,7 +81,7 @@ const Panell = () => {
       comentaris: Array.isArray(selectedTiquet.comentaris) ? [...selectedTiquet.comentaris, text] : [text]
     }
     setSelectedTiquet(updatedTiquet)
-    const updatedPendents = tiquetsPendents.map(tiquet =>
+    const updatedPendents = tiquetsPendents.map((tiquet) =>
       tiquet.id === updatedTiquet.id ? updatedTiquet : tiquet
     )
     setTiquetsPendents(updatedPendents)
@@ -90,67 +92,148 @@ const Panell = () => {
     <div>
       <main className="container mt-5">
         <h1>Administración de incidencias</h1>
-        <h2 className="mt-5">Tickets pendientes <button className="btn btn-primary" onClick={handleCreateTiquet}>Crear Ticket</button></h2>
-        <TiquetsPendents 
-          tiquetsPendents={tiquetsPendents} 
-          handleResolveTiquet={handleResolveTiquet} 
-          handleEditTiquet={(index) => handleEditTiquet(index, false)} 
-          handleViewComments={(index) => handleViewComments(index, false)} 
-          handleDeleteTiquet={(index) => handleDeleteTiquet(index, false)} 
+        {currentUser?.role === "admin" && (
+          <h2 className="mt-5">
+            Tickets pendientes{" "}
+            <button className="btn btn-primary" onClick={handleCreateTiquet}>
+              Crear Ticket
+            </button>
+          </h2>
+        )}
+        <TiquetsPendents
+          tiquetsPendents={tiquetsPendents}
+          handleResolveTiquet={
+            currentUser?.role === "admin" ? handleResolveTiquet : null
+          }
+          handleEditTiquet={(index) => handleEditTiquet(index, false)}
+          handleViewComments={(index) => handleViewComments(index, false)}
+          handleDeleteTiquet={
+            currentUser?.role === "admin"
+              ? (index) => handleDeleteTiquet(index, false)
+              : null
+          }
         />
 
         <h2 className="mt-5">Tickets resueltos</h2>
-        <TiquetsResolts 
-          tiquetsResolts={tiquetsResolts} 
-          handleViewComments={(index) => handleViewComments(index, true)} 
-          handleDeleteTiquet={(index) => handleDeleteTiquet(index, true)} 
+        <TiquetsResolts
+          tiquetsResolts={tiquetsResolts}
+          handleViewComments={(index) => handleViewComments(index, true)}
+          handleDeleteTiquet={
+            currentUser?.role === "admin"
+              ? (index) => handleDeleteTiquet(index, true)
+              : null
+          }
         />
       </main>
-      {selectedTiquet && (
-        <div className="modal fade show" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ display: 'block' }}>
+      {selectedTiquet && showComments && (
+        <div
+          className="modal fade show"
+          id="viewCommentsModal"
+          tabIndex="-1"
+          aria-labelledby="viewCommentsModalLabel"
+          aria-hidden="true"
+          style={{ display: "block" }}
+        >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">{showComments ? 'Comentarios' : 'Observaciones'}</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setSelectedTiquet(null)}></button>
+                <h5 className="modal-title" id="viewCommentsModalLabel">
+                  Comentaris
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setSelectedTiquet(null)}
+                ></button>
               </div>
               <div className="modal-body">
-                <p>Código incidencia: <span>{selectedTiquet.id}</span></p>
-                {showComments ? (
-                  <Comentaris comentaris={selectedTiquet.comentaris || []} />
-                ) : (
-                  <>
-                    <label htmlFor="aula" className="form-label">Aula:</label>
-                    <input className="form-control" value={selectedTiquet.aula} onChange={(e) => setSelectedTiquet({ ...selectedTiquet, aula: e.target.value })} />
-                    <label htmlFor="grupo" className="form-label">Grupo:</label>
-                    <input className="form-control" value={selectedTiquet.grupo} onChange={(e) => setSelectedTiquet({ ...selectedTiquet, grupo: e.target.value })} />
-                    <label htmlFor="ordenador" className="form-label">Ordenador:</label>
-                    <input className="form-control" value={selectedTiquet.ordenador} onChange={(e) => setSelectedTiquet({ ...selectedTiquet, ordenador: e.target.value })} />
-                    <label htmlFor="comentario" className="form-label">Comentario:</label>
-                    <input className="form-control" value={selectedTiquet.descripcio} onChange={(e) => setSelectedTiquet({ ...selectedTiquet, descripcio: e.target.value })} />
-                    <p className="small text-end">Autor: <span>{selectedTiquet.alumno}</span></p>
-                    <Comentari onAddComentari={handleAddComentari} />
-                  </>
-                )}
+                <Comentaris comentaris={selectedTiquet.comentaris || []} />
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setSelectedTiquet(null)}>Cancelar</button>
-                {!showComments && <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Guardar cambios</button>}
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={() => setSelectedTiquet(null)}
+                >
+                  Tancar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedTiquet && !showComments && (
+        <div
+          className="modal fade show"
+          id="addCommentModal"
+          tabIndex="-1"
+          aria-labelledby="addCommentModalLabel"
+          aria-hidden="true"
+          style={{ display: "block" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="addCommentModalLabel">
+                  Afegir Comentari
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setSelectedTiquet(null)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <Comentari onAddComentari={handleAddComentari} />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  onClick={() => setSelectedTiquet(null)}
+                >
+                  Tancar
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
       {showNouTicketModal && (
-        <div className="modal fade show" id="nouTicketModal" tabIndex="-1" aria-labelledby="nouTicketModalLabel" aria-hidden="true" style={{ display: 'block' }}>
+        <div
+          className="modal fade show"
+          id="nouTicketModal"
+          tabIndex="-1"
+          aria-labelledby="nouTicketModalLabel"
+          aria-hidden="true"
+          style={{ display: "block" }}
+        >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="nouTicketModalLabel">Crear Nuevo Ticket</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowNouTicketModal(false)}></button>
+                <h5 className="modal-title" id="nouTicketModalLabel">
+                  Crear Nuevo Ticket
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => setShowNouTicketModal(false)}
+                ></button>
               </div>
               <div className="modal-body">
-                <NouTicket dades_tiquets={tiquetsPendents} setDadesTiquets={handleSaveNouTicket} />
+                <NouTicket
+                  dades_tiquets={tiquetsPendents}
+                  setDadesTiquets={handleSaveNouTicket}
+                />
               </div>
             </div>
           </div>
